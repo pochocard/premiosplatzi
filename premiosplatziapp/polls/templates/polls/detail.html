@@ -1,0 +1,31 @@
+<form action="{% url 'polls:vote' question.id %}" method="post"> {# Colocamos la URL a la que el formulario va a apuntar y usamos el método HTTP post #}
+{% csrf_token %} {# Con esta etiqueta activamos el sistema de seguridad de Django para evitar el ataque Cross-Site Request Forgery #}
+<fieldset>
+    <legend><h1>{{ question.question_text }}</h1></legend> {# El título de nuestro formulario será el texto de la pregunta que viene como variable #}
+    {% if error_message %} {# Si nos viene un error message... #}
+        <p><strong>{{ error_message }}</strong></p> {# Colocaremos una párrafo en strong donde nos diga el valor de ese error_message #}
+    {% endif %}
+    {% for choice in question.choice_set.all %} {# Desplegaremos las opciones en con el ciclo for en la siguiente lista. #} 
+        <input {# Este input tendra los siguintes atributos: #}
+            type="radio" {# Para que usuario seleccione una choice/opción #}
+            name="choice" {# Cada vez que el usuario seleccione una pregunta, a nosotros nos llegará un valor que tendrá como llave a choice. #}
+            id="choice{{ forloop.counter }}" {# forloop.counter es un atajo de django para acceder al número actual de vueltas que tiene el ciclo haciendolo dinámico desde HTML #}
+            value="{{ choice.id }}" {# El valor contendra el mismo valor de respuesta en la BD #}
+        >
+        <label for="choice{{ forloop.counter }}"> {# Para cada uno de nuestros id, tendremos un label que tendrá en su texto el valor de la respuesta choice_text #}
+            {{ choice.choice_text }}
+        </label> 
+        <br> {# Colocamos un salto de línea para cada respuesta #}
+    {% endfor %}
+</fieldset>
+<input type="submit" value="Votar">
+</form>
+
+
+{% comment %} <h1>{{ question.question_text }}</h1>
+<ul>
+{% for choice in question.choice_set.all %}
+    <li>{{ choice.choice_text }}</li>
+{% endfor %}
+</ul> {% endcomment %}
+
